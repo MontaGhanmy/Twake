@@ -27,9 +27,13 @@ jobs:
         uses: MishaKav/jest-coverage-comment@main
         with:
           coverage-summary-path: twake/coverage/merged/coverage-summary.json
+      - name: Read coverage report
+        run: |
+          report=$(cat twake/coverage/merged/coverage-report.txt)
+          echo "::set-output name=report::$report"
+        id: report
       - name: Jest Coverage Report
-        uses: machine-learning-apps/pr-comment@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: github-actions-up-and-running/pr-comment@v1.0.0
         with:
-          path: twake/coverage/merged/coverage-report.txt
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          message: ${{ steps.report.outputs.report }}
